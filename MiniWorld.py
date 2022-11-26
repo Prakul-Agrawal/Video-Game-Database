@@ -3,25 +3,130 @@ import pymysql
 import pymysql.cursors
 
 
-def option2():
+#################
+# Retrieval
+#################
+
+# Query Functions
+
+## 1. Selection
+
+def get_matches_after_date():
     """
-    Function to implement option 1
+    Gets all matches which started after an input date
     """
-    print("Not implemented")
 
 
-def option3():
+def get_characters_available_for_level():
     """
-    Function to implement option 2
+    Retrieve all Character tuples which have minimum player level <= input level
     """
-    print("Not implemented")
 
 
-def option4():
+## 2. Projection
+
+def get_players_with_greater_level():
     """
-    Function to implement option 3
+    List all handles of all players with level > input
     """
-    print("Not implemented")
+
+
+def get_weapons_with_damage_and_speed():
+    """
+    List all weapons with attack damage > input dmg and attack speed between input min_speed and input max_speed
+    """
+
+
+## 3. Aggregate
+
+def get_max_coins_player():
+    """
+    Maximum coins owned by any player
+    """
+
+
+def get_player_average_kills():
+    """
+    Average/total kills over several matches for a given player
+    """
+
+
+def get_total_server_capacity():
+    """
+    Sum of capacities of all servers
+    """
+
+
+## 4. Search
+
+def characters_starting_with():
+    """
+    Tuples of characters whose names start with a particular letter
+    """
+
+
+def player_ids_with_handle_substring():
+    """
+    IDs of all players whose handles contain the supplied string
+    """
+
+
+#################
+# Modification
+#################
+
+# Insertion
+
+def create_match():
+    """
+    Insert data about new matches and their results after they end
+    """
+
+
+def create_player():
+    """
+    Insert data about newly registered accounts
+    """
+
+
+def create_character():
+    """
+    Insert data about newly released characters
+    """
+
+
+def create_server():
+    """
+    Insert details about a newly set up server
+    """
+
+
+# Updates
+
+def update_player_info():
+    """
+    Update player info when the player changes it
+    """
+
+
+def update_character():
+    """
+    Update the details of buffed / nerfed characters when new patches are released
+    """
+
+
+# Deletion
+
+def delete_server():
+    """
+    If a server is taken down, its record is deleted
+    """
+
+
+def delete_npc():
+    """
+    NPCs can be deleted from the game
+    """
 
 
 def hireAnEmployee():
@@ -50,7 +155,8 @@ def hireAnEmployee():
         row["Dno"] = int(input("Dno: "))
 
         query = "INSERT INTO EMPLOYEE(Fname, Minit, Lname, Ssn, Bdate, Address, Sex, Salary, Dno) VALUES('%s', '%c', '%s', '%s', '%s', '%s', '%c', %f, %d)" % (
-            row["Fname"], row["Minit"], row["Lname"], row["Ssn"], row["Bdate"], row["Address"], row["Sex"], row["Salary"], row["Dno"])
+            row["Fname"], row["Minit"], row["Lname"], row["Ssn"], row["Bdate"], row["Address"], row["Sex"],
+            row["Salary"], row["Dno"])
 
         print(query)
         cur.execute(query)
@@ -66,72 +172,67 @@ def hireAnEmployee():
     return
 
 
-def dispatch(ch):
-    """
-    Function that maps helper functions to option entered
-    """
+option_handlers = [get_matches_after_date, get_characters_available_for_level, get_players_with_greater_level,
+                   get_weapons_with_damage_and_speed, get_max_coins_player, get_player_average_kills,
+                   get_total_server_capacity, characters_starting_with, player_ids_with_handle_substring, create_match,
+                   create_player, create_character, create_server, update_player_info, update_character, delete_server,
+                   delete_npc]
 
-    if(ch == 1):
-        hireAnEmployee()
-    elif(ch == 2):
-        option2()
-    elif(ch == 3):
-        option3()
-    elif(ch == 4):
-        option4()
-    else:
-        print("Error: Invalid Option")
+option_count = len(option_handlers)
+
+
+def cls():
+    sp.call('clear', shell=True)
 
 
 # Global
-while(1):
-    tmp = sp.call('clear', shell=True)
+while True:
+    cls()
 
     username = "root"
     password = "password"
-    host="192.168.208.1"
+    host = "192.168.208.1"
 
     # username = input("Username: ")
     # password = input("Password: ")
     # host = input("Host: ")
 
     try:
-        # Set db name accordingly which have been create by you
-        # Set host to the server's address if you don't want to use local SQL server 
         con = pymysql.connect(host=host,
                               port=3306,
                               user=username,
                               password=password,
                               db="phase4",
                               cursorclass=pymysql.cursors.DictCursor)
-        tmp = sp.call('clear', shell=True)
 
-        if(con.open):
-            print("Connected")
+        cls()
+
+        if con.open:
+            print("Connected to the database!")
         else:
             print("Failed to connect")
 
-        tmp = input("Enter any key to CONTINUE>")
-
         with con.cursor() as cur:
-            while(1):
-                tmp = sp.call('clear', shell=True)
-                # Here taking example of Employee Mini-world
-                print("1. Option 1")  # Hire an Employee
-                print("2. Option 2")  # Fire an Employee
-                print("3. Option 3")  # Promote Employee
-                print("4. Option 4")  # Employee Statistics
-                print("5. Logout")
-                ch = int(input("Enter choice> "))
-                tmp = sp.call('clear', shell=True)
-                if ch == 5:
-                    exit()
+            while True:
+                cls()
+
+                for idx, option in enumerate(option_handlers):
+                    print(f"{idx + 1}: {option.__doc__.strip()}")
+
+                print(f"{option_count + 1}: Exit")
+
+                chosen_option_idx = int(input("Option number: ")) - 1
+                cls()
+
+                if chosen_option_idx == option_count:
+                    break
+                elif 0 <= chosen_option_idx < option_count:
+                    option_handlers[chosen_option_idx][1]()
                 else:
-                    dispatch(ch)
-                    tmp = input("Enter any key to CONTINUE>")
+                    print("Invalid option :(")
 
     except Exception as e:
-        tmp = sp.call('clear', shell=True)
+        cls()
         print(e)
         print("Connection Refused: Either username or password is incorrect or user doesn't have access to database")
-        tmp = input("Enter any key to CONTINUE>")
+        break
