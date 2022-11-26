@@ -3,6 +3,10 @@ import pymysql
 import pymysql.cursors
 
 
+def show_query_error(e):
+    print("Failed to execute query; ", e)
+
+
 #################
 # Retrieval
 #################
@@ -15,12 +19,37 @@ def get_matches_after_date():
     """
     Gets all matches which started after an input date
     """
+    try:
+        min_start_date = input("List all matches which have started since when? (YYYY-MM-DD): ")
+        query = "SELECT * FROM Matches WHERE DATE(StartTime) >= %s"
+        cur.execute(query, (min_start_date,))
+        result = cur.fetchall()
+
+        print("Results: ")
+        for i in result:
+            print(i)
+
+    except Exception as ex:
+        # con.rollback()
+        show_query_error(ex)
 
 
 def get_characters_available_for_level():
     """
     Retrieve all Character tuples which have minimum player level <= input level
     """
+    try:
+        level = int(input("For which level do you wish to retrieve that available characters? "))
+        query = "SELECT * FROM Characters WHERE MinimumPlayerLevel < %s;"
+        cur.execute(query, (level,))
+        result = cur.fetchall()
+
+        print("Results: ")
+        for i in result:
+            print(i)
+
+    except Exception as ex:
+        show_query_error(ex)
 
 
 ## 2. Projection
@@ -29,12 +58,39 @@ def get_players_with_greater_level():
     """
     List all handles of all players with level > input
     """
+    try:
+        level = int(input("Retrieve all players with which minimum level? "))
+        query = "SELECT Handle FROM (Player NATURAL JOIN Handles) WHERE Level > %s;"
+        cur.execute(query, (level,))
+        result = cur.fetchall()
+
+        print("Results: ")
+        for i in result:
+            print(i)
+
+    except Exception as ex:
+        show_query_error(ex)
 
 
 def get_weapons_with_damage_and_speed():
     """
     List all weapons with attack damage > input dmg and attack speed between input min_speed and input max_speed
     """
+    try:
+        min_damage = int(input("Minimum damage: "))
+        min_speed = int(input("Minimum attack speed: "))
+        max_speed = int(input("Maximum attack speed: "))
+
+        query = "SELECT WeaponName, Level FROM Weapon WHERE AttackSpeed BETWEEN %s AND %s AND AttackDamage > %s;"
+        cur.execute(query, (min_speed, max_speed, min_damage))
+        result = cur.fetchall()
+
+        print("Results: ")
+        for i in result:
+            print(i)
+
+    except Exception as ex:
+        show_query_error(ex)
 
 
 ## 3. Aggregate
@@ -43,18 +99,46 @@ def get_max_coins_player():
     """
     Maximum coins owned by any player
     """
+    try:
+        query = "SELECT PlayerID, Coins FROM PLAYER WHERE Coins IN (SELECT MAX(Coins) FROM PLAYER);"
+        cur.execute(query)
+        result = cur.fetchone()
+
+        print("Maximum coins owned by any player:", result)
+
+    except Exception as ex:
+        show_query_error(ex)
 
 
 def get_player_average_kills():
     """
     Average/total kills over several matches for a given player
     """
+    try:
+        player_id = input("Player ID: ")
+        query = "SELECT AVG(KillsScored) FROM PlayedWith WHERE PlayerID = %s;"
+        cur.execute(query, (player_id,))
+        result = cur.fetchone()
+
+        print(result)
+
+    except Exception as ex:
+        show_query_error(ex)
 
 
 def get_total_server_capacity():
     """
     Sum of capacities of all servers
     """
+    try:
+        query = "SELECT SUM(Capacity) FROM SERVER;"
+        cur.execute(query)
+        result = cur.fetchone()
+
+        print("Total capacity of servers:", result)
+
+    except Exception as ex:
+        show_query_error(ex)
 
 
 ## 4. Search
@@ -63,12 +147,37 @@ def characters_starting_with():
     """
     Tuples of characters whose names start with a particular letter
     """
+    try:
+        first_char = input("Character name starts with which character? ")
+        query = "SELECT * FROM Characters WHERE Name LIKE %s;"
+
+        cur.execute(query, (first_char + "%",))
+        result = cur.fetchall()
+
+        print("Results: ")
+        for i in result:
+            print(i)
+
+    except Exception as ex:
+        show_query_error(ex)
 
 
 def player_ids_with_handle_substring():
     """
     IDs of all players whose handles contain the supplied string
     """
+    try:
+        substring = input("Enter the substring to search for in player handles: ")
+        query = "SELECT DISTINCT PlayerID FROM Handles WHERE Handle LIKE `%s`;"
+        cur.execute(query, ("%" + substring + "%"))
+        result = cur.fetchall()
+
+        print("Results: ")
+        for i in result:
+            print(i)
+
+    except Exception as ex:
+        show_query_error(ex)
 
 
 #################
@@ -169,8 +278,6 @@ def hireAnEmployee():
         print("Failed to insert into database")
         print(">>>>>>>>>>>>>", e)
 
-    return
-
 
 option_handlers = [get_matches_after_date, get_characters_available_for_level, get_players_with_greater_level,
                    get_weapons_with_damage_and_speed, get_max_coins_player, get_player_average_kills,
@@ -227,9 +334,11 @@ while True:
                 if chosen_option_idx == option_count:
                     break
                 elif 0 <= chosen_option_idx < option_count:
-                    option_handlers[chosen_option_idx][1]()
+                    option_handlers[chosen_option_idx]()
                 else:
                     print("Invalid option :(")
+
+                input("Press [ENTER] key to continue")
 
     except Exception as e:
         cls()
