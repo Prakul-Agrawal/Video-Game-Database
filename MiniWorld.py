@@ -86,19 +86,23 @@ def dispatch(ch):
 # Global
 while(1):
     tmp = sp.call('clear', shell=True)
-    
-    # Can be skipped if you want to hardcode username and password
-    username = input("Username: ")
-    password = input("Password: ")
+
+    username = "root"
+    password = "password"
+    host="192.168.208.1"
+
+    # username = input("Username: ")
+    # password = input("Password: ")
+    # host = input("Host: ")
 
     try:
         # Set db name accordingly which have been create by you
         # Set host to the server's address if you don't want to use local SQL server 
-        con = pymysql.connect(host='localhost',
+        con = pymysql.connect(host=host,
                               port=3306,
                               user=username,
                               password=password,
-                              db='COMPANY',
+                              db="phase4",
                               cursorclass=pymysql.cursors.DictCursor)
         tmp = sp.call('clear', shell=True)
 
