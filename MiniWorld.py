@@ -95,9 +95,9 @@ while(1):
         # Set db name accordingly which have been create by you
         # Set host to the server's address if you don't want to use local SQL server 
         con = pymysql.connect(host='localhost',
-                              port=30306,
-                              user="root",
-                              password="password",
+                              port=3306,
+                              user=username,
+                              password=password,
                               db='COMPANY',
                               cursorclass=pymysql.cursors.DictCursor)
         tmp = sp.call('clear', shell=True)
