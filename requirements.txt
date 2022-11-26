@@ -22,3 +22,27 @@ and play rates in matches that were played after the release of the latest updat
 - Analyse the amount of matches being played in a certain server and the hours of
 the day in which the servers are busy.
 - Analyse the total amount of coins that a clan currently has.
+- Analyse the favoured maps and characters of different players
+
+
+Modification:
+Insertion
+-
+-
+-
+-
+Insert data about new matches and their results after they end.
+Insert new data about newly registered accounts.
+Insert data about newly released characters.
+Insert details about a newly set up server
+Updates
+-
+-
+Update player info when the player changes it.
+Update the details of buffed / nerfed characters and weapons when new patches
+are released.
+Deletion
+-
+-
+If a server is taken down, its record is deleted.
+NPCs can be deleted from the game if new ones are to be added in their stead.
