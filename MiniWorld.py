@@ -28,7 +28,7 @@ def get_matches_after_date():
     """
     try:
         min_start_date = input("List all matches which have started since when? (YYYY-MM-DD): ")
-        query = "SELECT * FROM Matches WHERE DATE(StartTime) >= %s"
+        query = "SELECT * FROM Matches WHERE DATE(StartTime) >= %s;"
         cur.execute(query, (min_start_date,))
         result = cur.fetchall()
 
@@ -197,9 +197,11 @@ def create_player():
         pfp = input("Enter URL of profile picture: ")
         query = "INSERT INTO Player(Email, ProfilePicture, AccountCreationDate) VALUES(%s, %s, CURDATE());"
         cur.execute(query, (email, pfp))
+        con.commit()
 
+        print("getting the max primary key")
         cur.execute("SELECT MAX(PlayerID) FROM Player;")
-        val = cur.fetchone()
+        val = list(cur.fetchone().values())[0]
 
         query = "INSERT INTO Handles VALUES(%s, %s);"
         cur.execute(query, (val, handle))
@@ -222,13 +224,13 @@ def create_character():
         hp = int(input("Enter character Health Points: "))
         ad = int(input("Enter character Attack Damage: "))
         lvl = int(input("Enter minimum lvl required to play character: "))
-        role = int(input("Enter the following for the specified role: \n\
-                        1 for Marksman, \n \
-                        2 for Mage \n \
-                        3 for Tank \n \
-                        4 for Support."))
+        role = int(input("Enter the following for the specified role:\n\
+                        1 for Marksman, \n\
+                        2 for Mage \n\
+                        3 for Tank \n\
+                        4 for Support.\n"))
         role_list = ["Marksman", "Mage", "Tank", "Support"]
-        stat_list = ["Attack Range", "Sepll Damage", "Armor", "Healing"]
+        stat_list = ["Attack Range", "Spell Damage", "Armor", "Healing"]
 
         if role in [1, 2, 3, 4]:
             stat = int(input("Enter character " + stat_list[role] + ": "))
@@ -258,18 +260,19 @@ def create_server():
         country = input("Enter country of server: ")
         city = input("Enter city of of server: ")
         hasparent = input("Does server have a parent server(y/n): ")
+
         if hasparent == "y":
             par_country = input("Enter parent server country: ")
             par_city = input("Enter parent server city: ")
 
-            query = "INSERT INTO server VALUES (" + cap + ", \'" + country + "\', \'" + city + "\', \'" + par_country + "\', \'" + par_city + "\');"
-            cur.execute(query)
+            query = "INSERT INTO server VALUES (%s, %s, %s, %s, %s);"
+            cur.execute(query, (cap, country, city, par_country, par_city))
+            cur.commit()
+        elif hasparent == "n":
+            query = "INSERT INTO server VALUES (%s, %s, %s, NULL, NULL);"
+            cur.execute(query, (cap, country, city))
             cur.commit()
 
-        elif hasparent == "n":
-            query = "INSERT INTO server VALUES (" + cap + ", \'" + country + "\', \'" + city + "\', NULL, NULL);"
-            cur.execute(query)
-            cur.commit()
         print("Server added.")
 
     except Exception as ex:
@@ -289,7 +292,7 @@ def update_player_info():
         pfp = input("Enter URL of profile picture: ")
         lvl = int(input("Enter player level: "))
         coins = int(input("Enter player coins: "))
-        timeplayed=  int(input("Enter player time played: "))
+        timeplayed = int(input("Enter player time played: "))
         rating = int(input("Enter player rating: "))
         clanid = int(input("Enter player clan-id: "))
 
@@ -299,7 +302,8 @@ def update_player_info():
         cur.execute
 
     except Exception as ex:
-        show_query_error(ex)    
+        show_query_error(ex)
+
 
 def update_character():
     """
@@ -423,7 +427,7 @@ while True:
                 cls()
 
                 if chosen_option_idx == option_count:
-                    break
+                    exit(0)
                 elif 0 <= chosen_option_idx < option_count:
                     option_handlers[chosen_option_idx]()
                 else:
