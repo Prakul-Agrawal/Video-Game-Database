@@ -17,15 +17,6 @@
 
 ## Functions Provided
 
-### Derived attributes
-
-Derived attributes in the database requirements are provided as a set of functions.
-
- 1. Get the last time the specified player played at.
- 2. Compute and show the rating of a clan.
- 3. Compute and show the duration of a given match.
- 4. Count the number of matches played on a given server.
-
 ### Retrieval
 
 Selection:
@@ -66,6 +57,15 @@ Updates:
 
  1. Delete the record of the server if its is taken down.
  2. Delete NPCs from maps if needed.
+
+### Derived attributes
+
+Derived attributes in the database requirements are provided as a set of functions.
+
+ 1. Get the last time the specified player played at.
+ 2. Compute and show the rating of a clan.
+ 3. Compute and show the duration of a given match.
+ 4. Count the number of matches played on a given server.
 
 ### Analysis
 
