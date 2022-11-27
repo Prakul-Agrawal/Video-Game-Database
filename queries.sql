@@ -29,7 +29,8 @@ SELECT AVG(KillsScored), CharacterName, MapName FROM (PlayedWith NATURAL JOIN Ma
 SELECT COUNT(*) FROM (Matches AS M INNER JOIN Server AS S ON M.Country = S.Country AND M.City = S.City) WHERE M.Country = "abcd" and M.City = "wxyz";
 
 -- SELECT A.PlayerID, A.MapName, A.CharacterName, A.WeaponName, Count(*) / (SELECT Count(*) FROM PlayedWith AS B WHERE B.PlayerID = A.PlayerID) FROM (PlayedWith NATURAL JOIN Matches) GROUP BY A.PlayerID, A.MapName, A.CharacterName, A.WeaponName;
-SELECT A.PlayerID, A.MapName, A.CharacterName, A.WeaponName, Count(*) / (SELECT Count(*) FROM PlayedWith AS B WHERE B.PlayerID = A.PlayerID) FROM (SELECT PlayerID, MapName, CharacterName, WeaponName FROM (PlayedWith NATURAL JOIN Matches)) AS A GROUP BY A.PlayerID, A.MapName, A.CharacterName, A.WeaponName ORDER BY A.PlayerID;
+-- SELECT A.PlayerID, A.MapName, A.CharacterName, A.WeaponName, Count(*) / (SELECT Count(*) FROM PlayedWith AS B WHERE B.PlayerID = A.PlayerID) FROM (SELECT PlayerID, MapName, CharacterName, WeaponName FROM (PlayedWith NATURAL JOIN Matches)) AS A GROUP BY A.PlayerID, A.MapName, A.CharacterName, A.WeaponName ORDER BY A.PlayerID;
+SELECT A.PlayerID, A.CharacterName, Count(*) / (SELECT Count(*) FROM PlayedWith AS B WHERE B.PlayerID = A.PlayerID) FROM PlayedWith AS A GROUP BY A.PlayerID, A.CharacterName ORDER BY A.PlayerID;
 
 a = SELECT CURDATE(); --not required (maybe)
 INSERT INTO Player(Email, ProfilePicture, AccountCreationDate) VALUES("abcd@gmail.com", "thisisaURL", CURDATE());
@@ -41,3 +42,14 @@ INSERT INTO Mage VALUES("CharName", 12);
 INSERT INTO Marksman VALUES("CharName", 13);
 INSERT INTO Tank VALUES("CharName", 11);
 INSERT INTO Support VALUES("CharName", 10);
+
+INSERT INTO Server VALUES(12345, "CountryName", "CityName", "ParentCountry", "ParentCity"); --If both parent are null, then it can accept, but otherwise has to satisfy foreign key
+
+UPDATE Player SET Level = 3, Email = "new@gmail.com", ProfilePicture = "newurl", Coins = 99999, TimePlayed = 2048, Rating = 69, ClanID = 1234 WHERE PlayerID = 10000;
+
+UPDATE Characters SET HealthPoints = 1234, AttackDamage = 45, MinimumPlayerLevel = 2 WHERE Name = "EnterNameHere";
+-- Depending on the Role:
+UPDATE MAGE SET SpellDamage = 24 WHERE CharacterName = "SameName";
+UPDATE MARKSMAN SET AttackRange = 24 WHERE CharacterName = "SameName"; 
+UPDATE TANK SET Armour = 24 WHERE CharacterName = "SameName"; 
+UPDATE SUPPORT SET Healing = 24 WHERE CharacterName = "SameName";
