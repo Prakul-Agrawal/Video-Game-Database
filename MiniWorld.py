@@ -6,6 +6,7 @@ from tabulate import tabulate
 def show_query_error(e):
     print("Failed to execute query; ", e)
 
+
 def show_table(d):
     if len(d) == 0:
         print("No results")
@@ -186,7 +187,6 @@ def create_match():
     """
 
 
-
 def create_player():
     """
     Insert data about newly registered accounts
@@ -195,17 +195,21 @@ def create_player():
         handle = input("Enter player handle: ")
         email = input("Enter E-mail: ")
         pfp = input("Enter URL of profile picture: ")
-        query = "INSERT INTO Player(Email, ProfilePicture, AccountCreationDate) VALUES(\'" + email + "\', \'" + pfp + "\', CURDATE());"
-        cur.execute(query)
+        query = "INSERT INTO Player(Email, ProfilePicture, AccountCreationDate) VALUES(%s, %s, CURDATE());"
+        cur.execute(query, (email, pfp))
+
         cur.execute("SELECT MAX(PlayerID) FROM Player;")
         val = cur.fetchone()
-    
-        query = "INSERT INTO Handles VALUES(" + str(val) + ", \'" + handle + "\');"
-        cur.execute(query)
+
+        query = "INSERT INTO Handles VALUES(%s, %s);"
+        cur.execute(query, (val, handle))
         con.commit()
+
         print("Player created.")
 
     except Exception as ex:
+        con.rollback()
+
         show_query_error(ex)
 
 
@@ -225,13 +229,15 @@ def create_character():
                         4 for Support."))
         role_list = ["Marksman", "Mage", "Tank", "Support"]
         stat_list = ["Attack Range", "Sepll Damage", "Armor", "Healing"]
+
         if role in [1, 2, 3, 4]:
             stat = int(input("Enter character " + stat_list[role] + ": "))
-            query = "INSERT INTO Characters VALUES(\'" + str(charname) + "\', " + str(hp) + "," + str(ad) + ", " + str(lvl) + ", " + role_list[role] + ");"
-            cur.execute(query)
+            query = "INSERT INTO Characters VALUES(%s, %s, %s, %s, %s);"
 
-            query = "INSERT INTO" + role_list[role] + "VALUES(\'" + charname + "\', " + stat + ");"
-            cur.execute(query)
+            cur.execute(query, (charname, hp, ad, lvl, role_list[role]))
+
+            query = "INSERT INTO %s VALUES(%s, %s);"
+            cur.execute(query, (role_list[role], charname, stat))
             cur.commit()
 
             print("Added character.")
@@ -239,6 +245,7 @@ def create_character():
             print("Invalid Role option.")
 
     except Exception as ex:
+        con.rollback()
         show_query_error(ex)
 
 
@@ -266,8 +273,8 @@ def create_server():
         print("Server added.")
 
     except Exception as ex:
+        con.rollback()
         show_query_error(ex)
-
 
 
 # Updates
@@ -294,12 +301,18 @@ def update_player_info():
     except Exception as ex:
         show_query_error(ex)    
 
-
-
 def update_character():
     """
     Update the details of buffed / nerfed characters when new patches are released
     """
+    #     UPDATE Characters SET HealthPoints = 1234, AttackDamage = 45, MinimumPlayerLevel = 2 WHERE Name = "EnterNameHere";
+
+    try:
+        print("hello")
+
+    except Exception as ex:
+        con.rollback()
+        show_query_error(ex)
 
 
 # Deletion
