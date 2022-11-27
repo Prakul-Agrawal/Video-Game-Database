@@ -285,6 +285,7 @@ def update_player_info():
     
 
 
+
 def update_character():
     """
     Update the details of buffed / nerfed characters when new patches are released
