@@ -400,7 +400,7 @@ def update_character():
         hp = int(input("Enter character Health Points: "))
         ad = int(input("Enter character Attack Damage: "))
         lvl = int(input("Enter minimum lvl required to play character: "))
-        stat = int(input("Enter " + stat_list[role]))
+        stat = int(input("Enter " + stat_list[role_num]))
         query = "UPDATE characters SET HealthPoints = %s, AttackDamage = %s, MinimumplayerLevel = %s WHERE Name = %s;"
         cur.execute(query, (hp, ad, lvl, charname))
 
