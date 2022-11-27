@@ -13,6 +13,75 @@ def show_table(d):
     else:
         print(tabulate(d, headers="keys", tablefmt="grid"))
 
+#################
+# Derived Attributes
+#################
+
+def get_player_last_played_at():
+    """
+    Get the last time the specified player played at
+    """
+    try:
+        player_id = input("Player ID: ")
+        query = "SELECT MAX(EndTime) FROM (PlayedWith NATURAL JOIN Matches) WHERE PlayerID = %s;"
+        cur.execute(query, (player_id,))
+
+        result = list(cur.fetchone().values())[0]
+
+        print("Played last at:", result)
+
+    except Exception as ex:
+        show_query_error(ex)
+
+
+def get_clan_rating():
+    """
+    Compute and show the rating of a clan
+    """
+    try:
+        clan_id = input("Clan ID: ")
+        query = "SELECT AVG(Rating) FROM Player WHERE ClanID = %s AND ClanID IS NOT NULL;"
+        cur.execute(query, (clan_id,))
+
+        result = list(cur.fetchone().values())[0]
+
+        print("Clan Rating: ", result)
+
+    except Exception as ex:
+        show_query_error(ex)
+
+def get_match_duration():
+    """
+    Compute and show the duration of a given match
+    """
+    try:
+        match_id = input("Match ID: ")
+        query = "SELECT TIMESTAMPDIFF(MINUTE, StartTime, EndTime) FROM Matches WHERE MatchID = %s;"
+        cur.execute(query, (match_id,))
+
+        result = list(cur.fetchone().values())[0]
+
+        print("Match duration: ", result)
+
+    except Exception as ex:
+        show_query_error(ex)
+
+def get_match_count_on_server():
+    """
+    Count the number of matches played on a given server
+    """
+    try:
+        country = input("Country: ")
+        city = input("City: ")
+        query = "SELECT COUNT(*) FROM Matches WHERE Country = %s AND City = %s;"
+        cur.execute(query, (country,city))
+
+        result = list(cur.fetchone().values())[0]
+
+        print("Number of matches played on the server: ", result)
+
+    except Exception as ex:
+        show_query_error(ex)
 
 #################
 # Retrieval
@@ -35,7 +104,6 @@ def get_matches_after_date():
         show_table(result)
 
     except Exception as ex:
-        # con.rollback()
         show_query_error(ex)
 
 
@@ -378,7 +446,7 @@ option_handlers = [get_matches_after_date, get_characters_available_for_level, g
                    get_weapons_with_damage_and_speed, get_max_coins_player, get_player_average_kills,
                    get_total_server_capacity, characters_starting_with, player_ids_with_handle_substring, create_match,
                    create_player, create_character, create_server, update_player_info, update_character, delete_server,
-                   delete_npc]
+                   delete_npc, get_player_last_played_at, get_clan_rating, get_match_duration, get_match_count_on_server]
 
 option_count = len(option_handlers)
 
