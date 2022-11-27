@@ -1,10 +1,16 @@
 import subprocess as sp
-import pymysql
 import pymysql.cursors
+from tabulate import tabulate
 
 
 def show_query_error(e):
     print("Failed to execute query; ", e)
+
+def show_table(d):
+    if len(d) == 0:
+        print("No results")
+    else:
+        print(tabulate(d, headers="keys", tablefmt="grid"))
 
 
 #################
@@ -25,9 +31,7 @@ def get_matches_after_date():
         cur.execute(query, (min_start_date,))
         result = cur.fetchall()
 
-        print("Results: ")
-        for i in result:
-            print(i)
+        show_table(result)
 
     except Exception as ex:
         # con.rollback()
@@ -44,9 +48,7 @@ def get_characters_available_for_level():
         cur.execute(query, (level,))
         result = cur.fetchall()
 
-        print("Results: ")
-        for i in result:
-            print(i)
+        show_table(result)
 
     except Exception as ex:
         show_query_error(ex)
@@ -64,9 +66,7 @@ def get_players_with_greater_level():
         cur.execute(query, (level,))
         result = cur.fetchall()
 
-        print("Results: ")
-        for i in result:
-            print(i)
+        show_table(result)
 
     except Exception as ex:
         show_query_error(ex)
@@ -85,9 +85,7 @@ def get_weapons_with_damage_and_speed():
         cur.execute(query, (min_speed, max_speed, min_damage))
         result = cur.fetchall()
 
-        print("Results: ")
-        for i in result:
-            print(i)
+        show_table(result)
 
     except Exception as ex:
         show_query_error(ex)
@@ -120,7 +118,7 @@ def get_player_average_kills():
         cur.execute(query, (player_id,))
         result = cur.fetchone()
 
-        print(result)
+        print("Average kills:", result)
 
     except Exception as ex:
         show_query_error(ex)
@@ -154,9 +152,7 @@ def characters_starting_with():
         cur.execute(query, (first_char + "%",))
         result = cur.fetchall()
 
-        print("Results: ")
-        for i in result:
-            print(i)
+        show_table(result)
 
     except Exception as ex:
         show_query_error(ex)
@@ -168,13 +164,11 @@ def player_ids_with_handle_substring():
     """
     try:
         substring = input("Enter the substring to search for in player handles: ")
-        query = "SELECT DISTINCT PlayerID FROM Handles WHERE Handle LIKE `%s`;"
+        query = "SELECT DISTINCT PlayerID FROM Handles WHERE Handle LIKE %s;"
         cur.execute(query, ("%" + substring + "%"))
         result = cur.fetchall()
 
-        print("Results: ")
-        for i in result:
-            print(i)
+        show_table(result)
 
     except Exception as ex:
         show_query_error(ex)
@@ -406,7 +400,7 @@ while True:
                 else:
                     print("Invalid option :(")
 
-                input("Press [ENTER] key to continue")
+                input("\nPress [ENTER] key to continue")
 
     except Exception as e:
         cls()
