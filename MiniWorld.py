@@ -13,6 +13,7 @@ def show_table(d):
     else:
         print(tabulate(d, headers="keys", tablefmt="grid"))
 
+
 #################
 # Derived Attributes
 #################
@@ -50,6 +51,7 @@ def get_clan_rating():
     except Exception as ex:
         show_query_error(ex)
 
+
 def get_match_duration():
     """
     Compute and show the duration of a given match
@@ -66,6 +68,7 @@ def get_match_duration():
     except Exception as ex:
         show_query_error(ex)
 
+
 def get_match_count_on_server():
     """
     Count the number of matches played on a given server
@@ -74,7 +77,7 @@ def get_match_count_on_server():
         country = input("Country: ")
         city = input("City: ")
         query = "SELECT COUNT(*) FROM Matches WHERE Country = %s AND City = %s;"
-        cur.execute(query, (country,city))
+        cur.execute(query, (country, city))
 
         result = list(cur.fetchone().values())[0]
 
@@ -82,6 +85,7 @@ def get_match_count_on_server():
 
     except Exception as ex:
         show_query_error(ex)
+
 
 #################
 # Retrieval
@@ -169,9 +173,9 @@ def get_max_coins_player():
     try:
         query = "SELECT PlayerID, Coins FROM PLAYER WHERE Coins IN (SELECT MAX(Coins) FROM PLAYER);"
         cur.execute(query)
-        result = cur.fetchone()
+        result = cur.fetchall()
 
-        print("Maximum coins owned by any player:", result)
+        show_table(result)
 
     except Exception as ex:
         show_query_error(ex)
@@ -182,10 +186,10 @@ def get_player_average_kills():
     Average/total kills over several matches for a given player
     """
     try:
-        player_id = input("Player ID: ")
+        player_id = int(input("Player ID: "))
         query = "SELECT AVG(KillsScored) FROM PlayedWith WHERE PlayerID = %s;"
         cur.execute(query, (player_id,))
-        result = cur.fetchone()
+        result = list(cur.fetchone().values())[0]
 
         print("Average kills:", result)
 
@@ -200,7 +204,7 @@ def get_total_server_capacity():
     try:
         query = "SELECT SUM(Capacity) FROM SERVER;"
         cur.execute(query)
-        result = cur.fetchone()
+        result = list(cur.fetchone().values())[0]
 
         print("Total capacity of servers:", result)
 
@@ -212,10 +216,10 @@ def get_total_server_capacity():
 
 def characters_starting_with():
     """
-    Tuples of characters whose names start with a particular letter
+    Tuples of characters whose names start with particular letters
     """
     try:
-        first_char = input("Character name starts with which character? ")
+        first_char = input("Character name starts with which characters? ")
         query = "SELECT * FROM Characters WHERE Name LIKE %s;"
 
         cur.execute(query, (first_char + "%",))
@@ -248,12 +252,6 @@ def player_ids_with_handle_substring():
 #################
 
 # Insertion
-
-def create_match():
-    """
-    Insert data about new matches and their results after they end
-    """
-
 
 def create_player():
     """
@@ -391,14 +389,34 @@ def update_character():
 
 def delete_server():
     """
-    If a server is taken down, its record is deleted
+    Delete specified server
     """
 
 
 def delete_npc():
     """
-    NPCs can be deleted from the game
+    Delete specified NPC
     """
+
+
+#################
+# Analysis
+#################
+
+def count_coins_in_clan():
+    """
+    Analyse the total number of coins owned by the members of a specific clan
+    """
+    try:
+        clan_id = input("Clan ID: ")
+        query = "SELECT SUM(Coins) FROM player WHERE ClanID = %s;"
+        cur.execute(query, (clan_id,))
+        result = list(cur.fetchone().values())[0]
+
+        print("Total coins:", result)
+
+    except Exception as ex:
+        show_query_error(ex)
 
 
 def hireAnEmployee():
@@ -444,9 +462,10 @@ def hireAnEmployee():
 
 option_handlers = [get_matches_after_date, get_characters_available_for_level, get_players_with_greater_level,
                    get_weapons_with_damage_and_speed, get_max_coins_player, get_player_average_kills,
-                   get_total_server_capacity, characters_starting_with, player_ids_with_handle_substring, create_match,
+                   get_total_server_capacity, characters_starting_with, player_ids_with_handle_substring,
                    create_player, create_character, create_server, update_player_info, update_character, delete_server,
-                   delete_npc, get_player_last_played_at, get_clan_rating, get_match_duration, get_match_count_on_server]
+                   delete_npc, get_player_last_played_at, get_clan_rating, get_match_duration,
+                   get_match_count_on_server, count_coins_in_clan]
 
 option_count = len(option_handlers)
 

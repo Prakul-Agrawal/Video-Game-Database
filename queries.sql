@@ -60,7 +60,7 @@ UPDATE Player SET Level = 3, Email = "new@gmail.com", ProfilePicture = "newurl",
 UPDATE Characters SET HealthPoints = 1234, AttackDamage = 45, MinimumPlayerLevel = 2 WHERE Name = "EnterNameHere";
 -- Depending on the Role:
 UPDATE MAGE SET SpellDamage = 24 WHERE CharacterName = "SameName";
-UPDATE MARKSMAN SET AttackRange = 24 WHERE CharacterName = "SameName"; 
+UPDATE MARKSMAN SET AttackRange = 24 WHERE CharacterName = "SameName";
 UPDATE TANK SET Armour = 24 WHERE CharacterName = "SameName"; 
 UPDATE SUPPORT SET Healing = 24 WHERE CharacterName = "SameName";
 
