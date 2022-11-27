@@ -150,7 +150,7 @@ def get_weapons_with_damage_and_speed():
         min_speed = int(input("Minimum attack speed: "))
         max_speed = int(input("Maximum attack speed: "))
 
-        query = "SELECT WeaponName, Level FROM Weapon WHERE AttackSpeed BETWEEN %s AND %s AND AttackDamage > %s;"
+        query = "SELECT WeaponName, Level FROM weapon WHERE AttackSpeed BETWEEN %s AND %s AND AttackDamage > %s;"
         cur.execute(query, (min_speed, max_speed, min_damage))
         result = cur.fetchall()
 
