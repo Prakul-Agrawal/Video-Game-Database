@@ -32,7 +32,7 @@ Projection:
 Aggregate:
 
  1. Output maximum coins owned by any player.
- 2. Output average over several matches for a given player.
+ 2. Output average kills over several matches for a given player.
  3. Output sum of capacities of all servers.
 
 Search:
