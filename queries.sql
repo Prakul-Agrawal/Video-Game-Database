@@ -49,6 +49,8 @@ INSERT INTO Marksman VALUES("CharName", 13);
 INSERT INTO Tank VALUES("CharName", 11);
 INSERT INTO Support VALUES("CharName", 10);
 
+
+
 INSERT INTO Server VALUES(12345, "CountryName", "CityName", "ParentCountry", "ParentCity"); --If both parent are null, then it can accept, but otherwise has to satisfy foreign key
 
 -- Updation
