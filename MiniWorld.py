@@ -508,8 +508,8 @@ while True:
     cls()
 
     username = "root"
-    password = "Thefuture1!"
-    host = "localhost"
+    password = "password"
+    host = "192.168.208.1"
 
     # username = input("Username: ")
     # password = input("Password: ")
