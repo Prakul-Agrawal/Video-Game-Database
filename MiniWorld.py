@@ -183,7 +183,7 @@ def get_max_coins_player():
 
 def get_player_average_kills():
     """
-    Average/total kills over several matches for a given player
+    Average kills over several matches for a given player
     """
     try:
         player_id = input("Player ID: ")
@@ -290,11 +290,8 @@ def create_character():
         hp = int(input("Enter character Health Points: "))
         ad = int(input("Enter character Attack Damage: "))
         lvl = int(input("Enter minimum lvl required to play character: "))
-        role = int(input("Enter the following for the specified role:\n\
-                        1 for Marksman, \n\
-                        2 for Mage \n\
-                        3 for Tank \n\
-                        4 for Support.\n"))
+        role = int(input(
+            "Enter the following for the specified role:\n- 1 for Marksman, \n- 2 for Mage \n- 3 for Tank \n- 4 for Support\n"))
         role -= 1
         role_list = ["Marksman", "Mage", "Tank", "Support"]
         stat_list = ["Attack Range", "Spell Damage", "Armor", "Healing"]
@@ -305,7 +302,7 @@ def create_character():
 
             cur.execute(query, (charname, hp, ad, lvl, role_list[role]))
 
-            query = "INSERT INTO " + role_list[role].lower() + " %s VALUES(%s, %s);"
+            query = "INSERT INTO " + role_list[role].lower() + " VALUES(%s, %s);"
             cur.execute(query, (charname, stat))
             con.commit()
 
