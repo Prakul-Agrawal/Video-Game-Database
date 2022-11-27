@@ -297,6 +297,7 @@ def create_character():
                         2 for Mage \n\
                         3 for Tank \n\
                         4 for Support.\n"))
+        role -= 1
         role_list = ["Marksman", "Mage", "Tank", "Support"]
         stat_list = ["Attack Range", "Spell Damage", "Armor", "Healing"]
 
