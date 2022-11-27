@@ -1,88 +1,75 @@
-## Installation Instructions
+# D&A Project Phase 4 - Team 22
 
-### MySQL
+- Arnav Negi
+- Shiven Sinha
+- Prakul Agrawal
 
-To install and run MySQL on a Docker container, follow the instructions that were previously given.
+## Requirements to run
 
-### PyMySQL
+ 1. PyMySQL and Tabulate python libraries.
+ 2. Python - version 3 or higher
 
-It is recommended that you use PyMySQL. You CANNOT use Pandas or any other Python library for the project. PyMySQL is an interface for connection to the MySQL server from Python.
+## How to run
 
-To install PyMySQL, you can use one of the two routes  
+ 1. Run `$ python3 MiniWorld.py` to run the CLI python script.
+ 2. Choose from the options provided.
+ 3. Enter the required data.
 
-### Pip
+## Functions Provided
 
-``` bash
-pip install PyMySQL
-```
+### Derived attributes
 
-### Conda
+Derived attributes in the database requirements are provided as a set of functions.
 
-``` bash
-conda install -c anaconda pymysql
-```
+ 1. Get the last time the specified player played at.
+ 2. Compute and show the rating of a clan.
+ 3. Compute and show the duration of a given match.
+ 4. Count the number of matches played on a given server.
 
-## Boilerplate
+### Retrieval
 
-We have provided a boilerplate piece of code just to get you started. The only reason this boiler plate is being shared is to show you what an acceptable UI looks like. You can decide to not use the boilerplate if you feel that you have already implemented a similar flow for your application.
+Selection:
 
-### To Run
+ 1. Gets all matches which started after an input date.
+ 2. Retrieve all Character tuples which are available for a given player level.
 
-To run the boilerplate code, you will need to login with your MySQL username and password (the boilerplate code has the username, password, and port hardcoded to work with the Docker installation instructions).
+Projection:
 
-``` bash
-python3 boilerPlate.py
-```
+ 1. List all handles of all players with level greater than input level.
+ 2. List all weapons with attack damage greater than input damage and attack speed between input min-speed and input max-speed.
 
-This will prompt for you to enter your username and password.
+Aggregate:
 
-### UI Interface
+ 1. Output maximum coins owned by any player.
+ 2. Output average over several matches for a given player.
+ 3. Output sum of capacities of all servers.
 
-Due to the timeline, you are not expected to implement a graphical UI (although you aren't disallowed either). A CLI (Command Line Interface) will suffice for the sake of the project.
+Search:
 
-You can also have different interfaces depending on which kind of user logged in to your software. Taking here the example of the EMPLOYEE Database, under the assumption that someone from adminstration logged into, the UI will look something like this.
+ 1. Data of characters whose names start with a particular letter.
+ 2. IDs of all players whose handles contain the supplied string.
 
-```
-1. Hire a new employee
-2. Fire an employee 
-3. Promote an employee
-4. Employee Statistics
-5. Logout
+### Modification
 
-Enter Choice > 
-```
+ Insertion:
 
-The boiler plate has a similar interface. Only one function has been implemented in the code provided. But it's enough to give you an idea about what you have to do.
+ 1. Insert data about newly registered accounts.
+ 2. Insert data about newly released characters.
+ 3. Insert details about a newly set up server.
 
-### Error Handling
+Updates:
 
-Although in this code, error handling hasn't explicitly been handled, you have to handle errors appropriately.  
+ 1. Update player info when the player/admin changes it.
+ 2. Update the details of buffed / nerfed characters when new patches are released.
 
-For example, if you try to delete a department, you can only do so after you've reassigned all the employess to another department. Or if you want to fire the manager of a department, you can only do so after assigning the department a new manager (where again, yes, the manager has to satisfy the foreign key constrain i.e. should be an employee himself)
+ Deletion:
 
-Instead of handling all the errors yourself, you can make use of error messages which MySQL returns. [You might find this useful to implement when you want to debug as well](https://stackoverflow.com/questions/25026244/how-to-get-the-mysql-type-of-error-with-pymysql).
+ 1. Delete the record of the server if its is taken down.
+ 2. Delete NPCs from maps if needed.
 
-``` python
-try:
-    do_stuff()
-except Exception as e:
-    print (e)
-```
+### Analysis
 
-## Creating Dump File For MySQL
+Functions to provided analysis on players, characters, etc.
 
-The database dump file can be created using
-
-``` bash
-mysqldump -u username -p databasename > filename.sql
-```
-
-
-## Resources
-
-* https://www.python.org/dev/peps/pep-0249/
-* https://dev.mysql.com/doc/connector-python/en/
-* http://zetcode.com/python/pymysql/
-* https://www.tutorialspoint.com/python3/python_database_access.htm
-* https://o7planning.org/en/11463/connecting-mysql-database-in-python-using-pymysql
-* https://www.journaldev.com/15539/python-mysql-example-tutorial
+ 1. Analyse player preferences for characters.
+ 2. Analyse the total number of coins owned by the members of a specific clan.
