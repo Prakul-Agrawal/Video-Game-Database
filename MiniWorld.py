@@ -192,22 +192,88 @@ def create_match():
     """
 
 
+
 def create_player():
     """
     Insert data about newly registered accounts
     """
+    try:
+        handle = input("Enter player handle: ")
+        email = input("Enter E-mail: ")
+        pfp = input("Enter URL of profile picture: ")
+        query = "INSERT INTO Player(Email, ProfilePicture, AccountCreationDate) VALUES(\'" + email + "\', \'" + pfp + "\', CURDATE());"
+        cur.execute(query)
+        cur.execute("SELECT MAX(PlayerID) FROM Player;")
+        val = cur.fetchone()
+    
+        query = "INSERT INTO Handles VALUES(" + str(val) + ", \'" + handle + "\');"
+        cur.execute(query)
+        con.commit()
+        print("Player created.")
+
+    except Exception as ex:
+        show_query_error(ex)
 
 
 def create_character():
     """
     Insert data about newly released characters
     """
+    try:
+        charname = input("Enter character name: ")
+        hp = int(input("Enter character Health Points: "))
+        ad = int(input("Enter character Attack Damage: "))
+        lvl = int(input("Enter minimum lvl required to play character: "))
+        role = int(input("Enter the following for the specified role: \n\
+                        1 for Marksman, \n \
+                        2 for Mage \n \
+                        3 for Tank \n \
+                        4 for Support."))
+        role_list = ["Marksman", "Mage", "Tank", "Support"]
+        stat_list = ["Attack Range", "Sepll Damage", "Armor", "Healing"]
+        if role in [1, 2, 3, 4]:
+            stat = int(input("Enter character " + stat_list[role] + ": "))
+            query = "INSERT INTO Characters VALUES(\'" + str(charname) + "\', " + str(hp) + "," + str(ad) + ", " + str(lvl) + ", " + role_list[role] + ");"
+            cur.execute(query)
+
+            query = "INSERT INTO" + role_list[role] + "VALUES(\'" + charname + "\', " + stat + ");"
+            cur.execute(query)
+            cur.commit()
+
+            print("Added character.")
+        else:
+            print("Invalid Role option.")
+
+    except Exception as ex:
+        show_query_error(ex)
 
 
 def create_server():
     """
     Insert details about a newly set up server
     """
+    try:
+        cap = int(input("Enter server capacity: "))
+        country = input("Enter country of server: ")
+        city = input("Enter city of of server: ")
+        hasparent = input("Does server have a parent server(y/n): ")
+        if hasparent == "y":
+            par_country = input("Enter parent server country: ")
+            par_city = input("Enter parent server city: ")
+
+            query = "INSERT INTO server VALUES (" + cap + ", \'" + country + "\', \'" + city + "\', \'" + par_country + "\', \'" + par_city + "\');"
+            cur.execute(query)
+            cur.commit()
+
+        elif hasparent == "n":
+            query = "INSERT INTO server VALUES (" + cap + ", \'" + country + "\', \'" + city + "\', NULL, NULL);"
+            cur.execute(query)
+            cur.commit()
+        print("Server added.")
+
+    except Exception as ex:
+        show_query_error(ex)
+
 
 
 # Updates
@@ -216,6 +282,7 @@ def update_player_info():
     """
     Update player info when the player changes it
     """
+    
 
 
 def update_character():

@@ -40,3 +40,4 @@ INSERT INTO Mage VALUES("CharName", 12);
 INSERT INTO Marksman VALUES("CharName", 13);
 INSERT INTO Tank VALUES("CharName", 11);
 INSERT INTO Support VALUES("CharName", 10);
+
