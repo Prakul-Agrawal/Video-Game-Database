@@ -387,7 +387,7 @@ def update_character():
         cur.execute(query, (charname,))
 
         role_num = 0
-        role = list(cur.fetchone().values())[0].lower()
+        role = list(cur.fetchone().values())[0]
         if role == "Marksman":
             role_num = 0
         elif role == "Mage":
@@ -400,11 +400,11 @@ def update_character():
         hp = int(input("Enter character Health Points: "))
         ad = int(input("Enter character Attack Damage: "))
         lvl = int(input("Enter minimum lvl required to play character: "))
-        stat = int(input("Enter " + stat_list[role_num]))
+        stat = int(input("Enter " + stat_list[role_num] + ": "))
         query = "UPDATE characters SET HealthPoints = %s, AttackDamage = %s, MinimumplayerLevel = %s WHERE Name = %s;"
         cur.execute(query, (hp, ad, lvl, charname))
 
-        query = "UPDATE " + role + " SET " + query_list[role_num] + "=%s WHERE CharacterName=%s;"
+        query = "UPDATE " + role.lower() + " SET " + query_list[role_num] + "=%s WHERE CharacterName=%s;"
         cur.execute(query, (stat, charname))
 
         con.commit()
