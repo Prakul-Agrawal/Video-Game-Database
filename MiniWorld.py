@@ -423,12 +423,38 @@ def delete_server():
     """
     If a server is taken down, its record is deleted
     """
+    try:
+        country = input("Enter country of server to be deleted: ")
+        city = input("Enter city of server to be deleted: ")
+
+        query="DELETE FROM server WHERE Country = %s AND City = %s;"
+        cur.execute(query, (country, city))
+        con.commit()
+
+        print("Server added.")
+
+    except Exception as ex:
+        con.rollback()
+        show_query_error(ex)
 
 
 def delete_npc():
     """
     NPCs can be deleted from the game
     """
+    try:
+        npc = input("Enter name of NPC to be deleted: ")
+        mapname = input("Enter map of NPC to be deleted: ")
+
+        query="DELETE FROM npc WHERE NPCName = %s AND MapName = %s;"
+        cur.execute(query, (npc, mapname))
+        con.commit()
+
+        print("Server added.")
+
+    except Exception as ex:
+        con.rollback()
+        show_query_error(ex)
 
 
 def hireAnEmployee():
