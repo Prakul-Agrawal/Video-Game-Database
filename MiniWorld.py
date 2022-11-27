@@ -276,7 +276,23 @@ def update_player_info():
     """
     Update player info when the player changes it
     """
-    
+    try:
+        id = int(input("Enter playerID: "))
+        email = input("Enter E-mail: ")
+        pfp = input("Enter URL of profile picture: ")
+        lvl = int(input("Enter player level: "))
+        coins = int(input("Enter player coins: "))
+        timeplayed=  int(input("Enter player time played: "))
+        rating = int(input("Enter player rating: "))
+        clanid = int(input("Enter player clan-id: "))
+
+        query = "UPDATE Player SET Level = 3, Email = \"%s\", ProfilePicture = \"%s\", Coins = %s, \
+                TimePlayed = %s, Rating = %s, ClanID = %s \
+                WHERE PlayerID = %s;"
+        cur.execute
+
+    except Exception as ex:
+        show_query_error(ex)    
 
 
 
