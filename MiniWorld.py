@@ -23,7 +23,7 @@ def get_player_last_played_at():
     """
     try:
         player_id = input("Player ID: ")
-        query = "SELECT MAX(EndTime) FROM (PlayedWith NATURAL JOIN Matches) WHERE PlayerID = %s;"
+        query = "SELECT MAX(EndTime) FROM (playedwith NATURAL JOIN matches) WHERE PlayerID = %s;"
         cur.execute(query, (player_id,))
 
         result = list(cur.fetchone().values())[0]
@@ -40,7 +40,7 @@ def get_clan_rating():
     """
     try:
         clan_id = input("Clan ID: ")
-        query = "SELECT AVG(Rating) FROM Player WHERE ClanID = %s AND ClanID IS NOT NULL;"
+        query = "SELECT AVG(Rating) FROM player WHERE ClanID = %s AND ClanID IS NOT NULL;"
         cur.execute(query, (clan_id,))
 
         result = list(cur.fetchone().values())[0]
@@ -56,7 +56,7 @@ def get_match_duration():
     """
     try:
         match_id = input("Match ID: ")
-        query = "SELECT TIMESTAMPDIFF(MINUTE, StartTime, EndTime) FROM Matches WHERE MatchID = %s;"
+        query = "SELECT TIMESTAMPDIFF(MINUTE, StartTime, EndTime) FROM matches WHERE MatchID = %s;"
         cur.execute(query, (match_id,))
 
         result = list(cur.fetchone().values())[0]
@@ -73,7 +73,7 @@ def get_match_count_on_server():
     try:
         country = input("Country: ")
         city = input("City: ")
-        query = "SELECT COUNT(*) FROM Matches WHERE Country = %s AND City = %s;"
+        query = "SELECT COUNT(*) FROM matches WHERE Country = %s AND City = %s;"
         cur.execute(query, (country,city))
 
         result = list(cur.fetchone().values())[0]
