@@ -453,6 +453,10 @@ def delete_npc():
         show_query_error(ex)
 
 
+#################
+# Analysis
+#################
+
 def count_coins_in_clan():
     """
     Analyse the total number of coins owned by the members of a specific clan
@@ -464,6 +468,21 @@ def count_coins_in_clan():
         result = list(cur.fetchone().values())[0]
 
         print("Total coins:", result)
+
+    except Exception as ex:
+        show_query_error(ex)
+
+
+def get_player_character_rates():
+    """
+    Analyse player preferences for characters
+    """
+    try:
+        query = "SELECT A.PlayerID, A.CharacterName, Count(*) / (SELECT Count(*) FROM PlayedWith AS B WHERE B.PlayerID = A.PlayerID) AS PlayRate FROM PlayedWith AS A GROUP BY A.PlayerID, A.CharacterName ORDER BY A.PlayerID;"
+        cur.execute(query)
+        result = cur.fetchall()
+
+        show_table(result)
 
     except Exception as ex:
         show_query_error(ex)
@@ -515,7 +534,7 @@ option_handlers = [get_matches_after_date, get_characters_available_for_level, g
                    get_total_server_capacity, characters_starting_with, player_ids_with_handle_substring,
                    create_player, create_character, create_server, update_player_info, update_character, delete_server,
                    delete_npc, get_player_last_played_at, get_clan_rating, get_match_duration,
-                   get_match_count_on_server, count_coins_in_clan]
+                   get_match_count_on_server, count_coins_in_clan, get_player_character_rates]
 
 option_count = len(option_handlers)
 
