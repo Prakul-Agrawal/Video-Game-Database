@@ -28,7 +28,8 @@ SELECT AVG(KillsScored), CharacterName, MapName FROM (PlayedWith NATURAL JOIN Ma
 
 SELECT COUNT(*) FROM (Matches AS M INNER JOIN Server AS S ON M.Country = S.Country AND M.City = S.City) WHERE M.Country = "abcd" and M.City = "wxyz";
 
-SELECT A.PlayerID, A.MapName, A.CharacterName, A.Count(*) / (SELECT B.Count(*) FROM PlayedWith AS B WHERE B.PlayerID = A.PlayerID) FROM (PlayedWith NATURAL JOIN Matches) GROUP BY A.MapName, A.CharacterName;
+-- SELECT A.PlayerID, A.MapName, A.CharacterName, A.WeaponName, Count(*) / (SELECT Count(*) FROM PlayedWith AS B WHERE B.PlayerID = A.PlayerID) FROM (PlayedWith NATURAL JOIN Matches) GROUP BY A.PlayerID, A.MapName, A.CharacterName, A.WeaponName;
+SELECT A.PlayerID, A.MapName, A.CharacterName, A.WeaponName, Count(*) / (SELECT Count(*) FROM PlayedWith AS B WHERE B.PlayerID = A.PlayerID) FROM (SELECT PlayerID, MapName, CharacterName, WeaponName FROM (PlayedWith NATURAL JOIN Matches)) AS A GROUP BY A.PlayerID, A.MapName, A.CharacterName, A.WeaponName ORDER BY A.PlayerID;
 
 a = SELECT CURDATE(); --not required (maybe)
 INSERT INTO Player(Email, ProfilePicture, AccountCreationDate) VALUES("abcd@gmail.com", "thisisaURL", CURDATE());
