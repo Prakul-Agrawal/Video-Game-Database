@@ -262,13 +262,13 @@ def create_server():
             par_country = input("Enter parent server country: ")
             par_city = input("Enter parent server city: ")
 
-            query = "INSERT INTO server VALUES (" + cap + ", \'" + country + "\', \'" + city + "\', \'" + par_country + "\', \'" + par_city + "\');"
-            cur.execute(query)
+            query = "INSERT INTO Server VALUES(%s, %s, %s, %s, %s);"
+            cur.execute(query, (cap,country,city,par_country,par_city))
             cur.commit()
 
         elif hasparent == "n":
-            query = "INSERT INTO server VALUES (" + cap + ", \'" + country + "\', \'" + city + "\', NULL, NULL);"
-            cur.execute(query)
+            query = "INSERT INTO Server VALUES(%s, %s, %s, NULL, NULL);"
+            cur.execute(query, (cap,country,city))
             cur.commit()
         print("Server added.")
 
@@ -293,12 +293,16 @@ def update_player_info():
         rating = int(input("Enter player rating: "))
         clanid = int(input("Enter player clan-id: "))
 
-        query = "UPDATE Player SET Level = 3, Email = \"%s\", ProfilePicture = \"%s\", Coins = %s, \
+        query = "UPDATE Player SET Level = %s, Email = %s, ProfilePicture = %s, Coins = %s, \
                 TimePlayed = %s, Rating = %s, ClanID = %s \
                 WHERE PlayerID = %s;"
-        cur.execute
+        cur.execute(query, (lvl, email, pfp, coins, timeplayed, rating, clanid))
+        con.commit()
+
+        print("Player updated.")
 
     except Exception as ex:
+        con.rollback()
         show_query_error(ex)    
 
 def update_character():
@@ -308,7 +312,16 @@ def update_character():
     #     UPDATE Characters SET HealthPoints = 1234, AttackDamage = 45, MinimumPlayerLevel = 2 WHERE Name = "EnterNameHere";
 
     try:
-        print("hello")
+        charactername = input("Enter character name: ")
+        hp = int(input("Enter Health Points of character: "))
+        ad = int(input("Enter character Attack Damage: "))
+        minlvl = int(input("Enter minimum level required to play character: "))
+
+        query = "UPDATE Characters SET HealthPoints = %s, AttackDamage = %s, MinimumPlayerLevel = %s WHERE Name = %s;"
+        cur.execute(query, (hp, ad, minlvl, charactername))
+        con.commit()
+
+        print("Character updated.")
 
     except Exception as ex:
         con.rollback()
@@ -321,12 +334,40 @@ def delete_server():
     """
     If a server is taken down, its record is deleted
     """
+    #   DELETE FROM Server WHERE Country = "CountryName" AND City = "CityName";
+
+    try:
+        country = input("Enter server country: ")
+        city = input("Enter server city: ")
+        query = "DELETE FROM Server WHERE Country = %s AND City = %s;"
+
+        cur.execute(query, (country, city))
+        con.commit()
+
+        print("Server deleted.")
+
+    except Exception as ex:
+        con.rollback()
+        show_query_error(ex)
 
 
 def delete_npc():
     """
     NPCs can be deleted from the game
     """
+    try:
+        npc = input("Enter npc name: ")
+        map = input("Enter map in which npc is to be removed: ")
+        query = "DELETE FROM NPC WHERE NPCName = %s AND MapName = %s;"
+
+        cur.execute(query, (npc, map))
+        con.commit()
+
+        print("NPC deleted from map.")
+
+    except Exception as ex:
+        con.rollback()
+        show_query_error(ex)
 
 
 def hireAnEmployee():
