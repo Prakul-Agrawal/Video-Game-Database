@@ -238,7 +238,7 @@ def player_ids_with_handle_substring():
     try:
         substring = input("Enter the substring to search for in player handles: ")
         query = "SELECT DISTINCT PlayerID FROM handles WHERE Handle LIKE %s;"
-        cur.execute(query, ("%" + substring + "%"))
+        cur.execute(query, ("%" + substring + "%",))
         result = cur.fetchall()
 
         show_table(result)
@@ -351,7 +351,7 @@ def update_player_info():
     Update player info when the player changes it
     """
     try:
-        id = int(input("Enter playerID: "))
+        player_id = int(input("Enter playerID: "))
         email = input("Enter E-mail: ")
         pfp = input("Enter URL of profile picture: ")
         lvl = int(input("Enter player level: "))
@@ -360,10 +360,8 @@ def update_player_info():
         rating = int(input("Enter player rating: "))
         clanid = int(input("Enter player clan-id: "))
 
-        query = "UPDATE player SET Level = %s, Email = \"%s\", ProfilePicture = \"%s\", Coins = %s, \
-                TimePlayed = %s, Rating = %s, ClanID = %s \
-                WHERE playerID = %s;"
-        cur.execute(query, (lvl, email, pfp, coins, timeplayed, rating, clanid))
+        query = "UPDATE player SET Level = %s, Email = %s, ProfilePicture = %s, Coins = %s, TimePlayed = %s, Rating = %s, ClanID = %s WHERE playerID = %s;"
+        cur.execute(query, (lvl, email, pfp, coins, timeplayed, rating, clanid, player_id))
         con.commit()
 
         print("Player record updated.")
@@ -383,17 +381,18 @@ def update_character():
     try:
         charname = input("Enter character name: ")
         query = "SELECT Role FROM characters WHERE Name=%s"
-        cur.execute(query, (charname))
-        rolenum = 0
-        role = cur.fetchone().lower()
+        cur.execute(query, (charname,))
+
+        role_num = 0
+        role = list(cur.fetchone().values())[0].lower()
         if role == "Marksman":
-            rolenum = 0
+            role_num = 0
         elif role == "Mage":
-            rolenum = 1
+            role_num = 1
         elif role == "Tank":
-            rolenum = 2
+            role_num = 2
         else:
-            rolenum = 3
+            role_num = 3
 
         hp = int(input("Enter character Health Points: "))
         ad = int(input("Enter character Attack Damage: "))
@@ -402,7 +401,7 @@ def update_character():
         query = "UPDATE characters SET HealthPoints = %s, AttackDamage = %s, MinimumplayerLevel = %s WHERE Name = %s;"
         cur.execute(query, (hp, ad, lvl, charname))
 
-        query = "UPDATE " + role + " SET " + query_list[rolenum] + "=%s WHERE CharacterName=%s;"
+        query = "UPDATE " + role + " SET " + query_list[role_num] + "=%s WHERE CharacterName=%s;"
         cur.execute(query, (stat, charname))
 
         con.commit()
@@ -417,7 +416,7 @@ def update_character():
 
 def delete_server():
     """
-   Delete specified server
+    Delete specified server
     """
     try:
         country = input("Enter country of server to be deleted: ")
@@ -436,7 +435,7 @@ def delete_server():
 
 def delete_npc():
     """
-    NPCs can be deleted from the game
+    Delete specified NPC from a map
     """
     try:
         npc = input("Enter name of NPC to be deleted: ")
@@ -526,7 +525,7 @@ def hireAnEmployee():
     except Exception as e:
         con.rollback()
         print("Failed to insert into database")
-        print(">>>>>>>>>>>>>", e)
+        print(">>>>>>>>>>>>> ", e)
 
 
 option_handlers = [get_matches_after_date, get_characters_available_for_level, get_players_with_greater_level,
