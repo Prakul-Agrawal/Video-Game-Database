@@ -72,4 +72,10 @@ DELETE FROM NPC WHERE NPCName = "Name" AND MapName = "MapName";
 
 --Derived Attributes
 
-SELECT AVG(Rating) FROM Player WHERE ClanID = 103 AND ClanID IS NOT NULL;
+SELECT AVG(Rating) FROM Player WHERE ClanID = 103 AND ClanID IS NOT NULL; -- Clan Rating
+
+SELECT TIMESTAMPDIFF(MINUTE, StartTime, EndTime) FROM Matches WHERE MatchID = 2; -- Duration of Match
+
+SELECT COUNT(*) FROM Matches WHERE Country = "CountryName" AND City = "CityName"; -- No. of matches played on a server
+
+SELECT MAX(EndTime) FROM (PlayedWith NATURAL JOIN Matches) WHERE PlayerID = 10000; -- Last Played At Time (If NULL, no matches played so far)
