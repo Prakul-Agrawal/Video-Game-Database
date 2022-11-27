@@ -24,7 +24,7 @@ def get_player_last_played_at():
     """
     try:
         player_id = input("Player ID: ")
-        query = "SELECT MAX(EndTime) FROM (PlayedWith NATURAL JOIN Matches) WHERE PlayerID = %s;"
+        query = "SELECT MAX(EndTime) FROM (playedwith NATURAL JOIN matches) WHERE PlayerID = %s;"
         cur.execute(query, (player_id,))
 
         result = list(cur.fetchone().values())[0]
@@ -41,7 +41,7 @@ def get_clan_rating():
     """
     try:
         clan_id = input("Clan ID: ")
-        query = "SELECT AVG(Rating) FROM Player WHERE ClanID = %s AND ClanID IS NOT NULL;"
+        query = "SELECT AVG(Rating) FROM player WHERE ClanID = %s AND ClanID IS NOT NULL;"
         cur.execute(query, (clan_id,))
 
         result = list(cur.fetchone().values())[0]
@@ -58,7 +58,7 @@ def get_match_duration():
     """
     try:
         match_id = input("Match ID: ")
-        query = "SELECT TIMESTAMPDIFF(MINUTE, StartTime, EndTime) FROM Matches WHERE MatchID = %s;"
+        query = "SELECT TIMESTAMPDIFF(MINUTE, StartTime, EndTime) FROM matches WHERE MatchID = %s;"
         cur.execute(query, (match_id,))
 
         result = list(cur.fetchone().values())[0]
@@ -76,7 +76,7 @@ def get_match_count_on_server():
     try:
         country = input("Country: ")
         city = input("City: ")
-        query = "SELECT COUNT(*) FROM Matches WHERE Country = %s AND City = %s;"
+        query = "SELECT COUNT(*) FROM matches WHERE Country = %s AND City = %s;"
         cur.execute(query, (country, city))
 
         result = list(cur.fetchone().values())[0]
@@ -101,7 +101,7 @@ def get_matches_after_date():
     """
     try:
         min_start_date = input("List all matches which have started since when? (YYYY-MM-DD): ")
-        query = "SELECT * FROM Matches WHERE DATE(StartTime) >= %s;"
+        query = "SELECT * FROM matches WHERE DATE(StartTime) >= %s;"
         cur.execute(query, (min_start_date,))
         result = cur.fetchall()
 
@@ -117,7 +117,7 @@ def get_characters_available_for_level():
     """
     try:
         level = int(input("For which level do you wish to retrieve that available characters? "))
-        query = "SELECT * FROM Characters WHERE MinimumPlayerLevel < %s;"
+        query = "SELECT * FROM characters WHERE MinimumPlayerLevel < %s;"
         cur.execute(query, (level,))
         result = cur.fetchall()
 
@@ -135,7 +135,7 @@ def get_players_with_greater_level():
     """
     try:
         level = int(input("Retrieve all players with which minimum level? "))
-        query = "SELECT Handle FROM (Player NATURAL JOIN Handles) WHERE Level > %s;"
+        query = "SELECT Handle FROM (player NATURAL JOIN handles) WHERE Level > %s;"
         cur.execute(query, (level,))
         result = cur.fetchall()
 
@@ -154,7 +154,7 @@ def get_weapons_with_damage_and_speed():
         min_speed = int(input("Minimum attack speed: "))
         max_speed = int(input("Maximum attack speed: "))
 
-        query = "SELECT WeaponName, Level FROM Weapon WHERE AttackSpeed BETWEEN %s AND %s AND AttackDamage > %s;"
+        query = "SELECT WeaponName, Level FROM weapon WHERE AttackSpeed BETWEEN %s AND %s AND AttackDamage > %s;"
         cur.execute(query, (min_speed, max_speed, min_damage))
         result = cur.fetchall()
 
@@ -171,7 +171,7 @@ def get_max_coins_player():
     Maximum coins owned by any player
     """
     try:
-        query = "SELECT PlayerID, Coins FROM PLAYER WHERE Coins IN (SELECT MAX(Coins) FROM PLAYER);"
+        query = "SELECT PlayerID, Coins FROM player WHERE Coins IN (SELECT MAX(Coins) FROM player);"
         cur.execute(query)
         result = cur.fetchall()
 
@@ -186,8 +186,8 @@ def get_player_average_kills():
     Average/total kills over several matches for a given player
     """
     try:
-        player_id = int(input("Player ID: "))
-        query = "SELECT AVG(KillsScored) FROM PlayedWith WHERE PlayerID = %s;"
+        player_id = input("Player ID: ")
+        query = "SELECT AVG(KillsScored) FROM playedwith WHERE PlayerID = %s;"
         cur.execute(query, (player_id,))
         result = list(cur.fetchone().values())[0]
 
@@ -202,7 +202,7 @@ def get_total_server_capacity():
     Sum of capacities of all servers
     """
     try:
-        query = "SELECT SUM(Capacity) FROM SERVER;"
+        query = "SELECT SUM(capacity) FROM SERVER;"
         cur.execute(query)
         result = list(cur.fetchone().values())[0]
 
@@ -220,7 +220,7 @@ def characters_starting_with():
     """
     try:
         first_char = input("Character name starts with which characters? ")
-        query = "SELECT * FROM Characters WHERE Name LIKE %s;"
+        query = "SELECT * FROM characters WHERE Name LIKE %s;"
 
         cur.execute(query, (first_char + "%",))
         result = cur.fetchall()
@@ -237,7 +237,7 @@ def player_ids_with_handle_substring():
     """
     try:
         substring = input("Enter the substring to search for in player handles: ")
-        query = "SELECT DISTINCT PlayerID FROM Handles WHERE Handle LIKE %s;"
+        query = "SELECT DISTINCT PlayerID FROM handles WHERE Handle LIKE %s;"
         cur.execute(query, ("%" + substring + "%"))
         result = cur.fetchall()
 
@@ -261,15 +261,15 @@ def create_player():
         handle = input("Enter player handle: ")
         email = input("Enter E-mail: ")
         pfp = input("Enter URL of profile picture: ")
-        query = "INSERT INTO Player(Email, ProfilePicture, AccountCreationDate) VALUES(%s, %s, CURDATE());"
+        query = "INSERT INTO player(Email, ProfilePicture, AccountCreationDate) VALUES(%s, %s, CURDATE());"
         cur.execute(query, (email, pfp))
         con.commit()
 
         print("getting the max primary key")
-        cur.execute("SELECT MAX(PlayerID) FROM Player;")
+        cur.execute("SELECT MAX(PlayerID) FROM player;")
         val = list(cur.fetchone().values())[0]
 
-        query = "INSERT INTO Handles VALUES(%s, %s);"
+        query = "INSERT INTO handles VALUES(%s, %s);"
         cur.execute(query, (val, handle))
         con.commit()
 
@@ -295,18 +295,19 @@ def create_character():
                         2 for Mage \n\
                         3 for Tank \n\
                         4 for Support.\n"))
+        role -= 1
         role_list = ["Marksman", "Mage", "Tank", "Support"]
         stat_list = ["Attack Range", "Spell Damage", "Armor", "Healing"]
 
         if role in [1, 2, 3, 4]:
             stat = int(input("Enter character " + stat_list[role] + ": "))
-            query = "INSERT INTO Characters VALUES(%s, %s, %s, %s, %s);"
+            query = "INSERT INTO characters VALUES(%s, %s, %s, %s, %s);"
 
             cur.execute(query, (charname, hp, ad, lvl, role_list[role]))
 
             query = "INSERT INTO %s VALUES(%s, %s);"
-            cur.execute(query, (role_list[role], charname, stat))
-            cur.commit()
+            cur.execute(query, (role_list[role].lower(), charname, stat))
+            con.commit()
 
             print("Added character.")
         else:
@@ -333,11 +334,11 @@ def create_server():
 
             query = "INSERT INTO server VALUES (%s, %s, %s, %s, %s);"
             cur.execute(query, (cap, country, city, par_country, par_city))
-            cur.commit()
+            con.commit()
         elif hasparent == "n":
             query = "INSERT INTO server VALUES (%s, %s, %s, NULL, NULL);"
             cur.execute(query, (cap, country, city))
-            cur.commit()
+            con.commit()
 
         print("Server added.")
 
@@ -362,12 +363,16 @@ def update_player_info():
         rating = int(input("Enter player rating: "))
         clanid = int(input("Enter player clan-id: "))
 
-        query = "UPDATE Player SET Level = 3, Email = \"%s\", ProfilePicture = \"%s\", Coins = %s, \
+        query = "UPDATE player SET Level = %s, Email = \"%s\", ProfilePicture = \"%s\", Coins = %s, \
                 TimePlayed = %s, Rating = %s, ClanID = %s \
-                WHERE PlayerID = %s;"
-        cur.execute
+                WHERE playerID = %s;"
+        cur.execute(query, (lvl, email, pfp, coins, timeplayed, rating, clanid))
+        con.commit()
+
+        print("Player record updated.")
 
     except Exception as ex:
+        con.rollback()
         show_query_error(ex)
 
 
@@ -375,10 +380,36 @@ def update_character():
     """
     Update the details of buffed / nerfed characters when new patches are released
     """
-    #     UPDATE Characters SET HealthPoints = 1234, AttackDamage = 45, MinimumPlayerLevel = 2 WHERE Name = "EnterNameHere";
-
+    #     UPDATE characters SET HealthPoints = 1234, AttackDamage = 45, MinimumplayerLevel = 2 WHERE Name = "EnterNameHere";
+    stat_list = ["Attack Range", "Spell Damage", "Armor", "Healing"]
+    query_list = ["AttackRange", "SpellDamage", "Armor", "Healing"]
     try:
-        print("hello")
+        charname = input("Enter character name: ")
+        query = "SELECT Role FROM characters WHERE Name=%s"
+        cur.execute(query, (charname))
+        rolenum = 0
+        role = cur.fetchone().lower()
+        if role == "Marksman": 
+            rolenum = 0
+        elif role == "Mage": 
+            rolenum = 1
+        elif role == "Tank": 
+            rolenum = 2
+        else:
+            rolenum = 3
+
+        hp = int(input("Enter character Health Points: "))
+        ad = int(input("Enter character Attack Damage: "))
+        lvl = int(input("Enter minimum lvl required to play character: "))
+        stat = int(input("Enter " + stat_list[role]))
+        query = "UPDATE characters SET HealthPoints = %s, AttackDamage = %s, MinimumplayerLevel = %s WHERE Name = %s;"
+        cur.execute(query, (hp, ad, lvl, charname))
+
+        query = "UPDATE " + role + " SET " + query_list[role] + "=%s WHERE CharacterName=%s;"
+        cur.execute(query, (stat, charname))
+
+        con.commit()
+        print("Updated character info.")
 
     except Exception as ex:
         con.rollback()
@@ -389,19 +420,41 @@ def update_character():
 
 def delete_server():
     """
-    Delete specified server
+   Delete specified server
     """
+    try:
+        country = input("Enter country of server to be deleted: ")
+        city = input("Enter city of server to be deleted: ")
+
+        query="DELETE FROM server WHERE Country = %s AND City = %s;"
+        cur.execute(query, (country, city))
+        con.commit()
+
+        print("Server added.")
+
+    except Exception as ex:
+        con.rollback()
+        show_query_error(ex)
 
 
 def delete_npc():
     """
-    Delete specified NPC
+    NPCs can be deleted from the game
     """
+    try:
+        npc = input("Enter name of NPC to be deleted: ")
+        mapname = input("Enter map of NPC to be deleted: ")
 
+        query="DELETE FROM npc WHERE NPCName = %s AND MapName = %s;"
+        cur.execute(query, (npc, mapname))
+        con.commit()
 
-#################
-# Analysis
-#################
+        print("Server added.")
+
+    except Exception as ex:
+        con.rollback()
+        show_query_error(ex)
+
 
 def count_coins_in_clan():
     """
@@ -491,7 +544,7 @@ while True:
                               port=3306,
                               user=username,
                               password=password,
-                              db="phase4",
+                              db="Phase4",
                               cursorclass=pymysql.cursors.DictCursor)
 
         cls()
