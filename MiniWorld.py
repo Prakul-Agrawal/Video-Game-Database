@@ -477,7 +477,7 @@ def get_player_character_rates():
     Analyse player preferences for characters
     """
     try:
-        query = "SELECT A.PlayerID, A.CharacterName, Count(*) / (SELECT Count(*) FROM PlayedWith AS B WHERE B.PlayerID = A.PlayerID) AS PlayRate FROM PlayedWith AS A GROUP BY A.PlayerID, A.CharacterName ORDER BY A.PlayerID;"
+        query = "SELECT A.PlayerID, A.CharacterName, Count(*) / (SELECT Count(*) FROM playedwith AS B WHERE B.PlayerID = A.PlayerID) AS PlayRate FROM playedwith AS A GROUP BY A.PlayerID, A.CharacterName ORDER BY A.PlayerID;"
         cur.execute(query)
         result = cur.fetchall()
 
