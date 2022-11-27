@@ -453,6 +453,7 @@ CREATE TABLE `transaction` (
 
 LOCK TABLES `transaction` WRITE;
 /*!40000 ALTER TABLE `transaction` DISABLE KEYS */;
+INSERT INTO `transaction` VALUES (10006,1,'Akali'),(10007,1,'Akali'),(10011,1,'Akali'),(10012,1,'Chester'),(10015,1,'Chester'),(10015,1,'Garcy'),(10017,1,'Chester'),(10017,1,'Sandra'),(10018,1,'Chester'),(10006,2,'Garcy'),(10007,2,'Garcy'),(10008,2,'Garcy'),(10011,2,'Garcy'),(10013,2,'Garcy'),(10019,2,'Garcy'),(10006,3,'Sandra'),(10007,3,'Sandra'),(10010,3,'Chester'),(10010,3,'Sandra'),(10011,3,'Chester'),(10017,3,'Chester'),(10018,3,'Chester'),(10000,4,'Garcy'),(10001,4,'Garcy'),(10001,4,'Sandra'),(10003,4,'Garcy'),(10005,4,'Garcy'),(10005,4,'Sandra'),(10010,4,'Garcy'),(10016,4,'Garcy'),(10019,4,'Garcy'),(10000,5,'Chester'),(10004,5,'Santa'),(10006,5,'Chester'),(10006,5,'Santa'),(10013,5,'Santa'),(10014,5,'Santa'),(10015,5,'Santa'),(10016,5,'Chester'),(10000,6,'Chester'),(10003,6,'Sandra'),(10004,6,'Lucy'),(10011,6,'Sandra'),(10014,6,'Chester'),(10019,6,'Chester'),(10000,7,'Akali'),(10000,7,'Garcy'),(10001,7,'Garcy'),(10003,7,'Garcy'),(10003,7,'Lucy'),(10011,7,'Garcy'),(10012,7,'Garcy'),(10017,7,'Garcy'),(10019,7,'Akali'),(10019,7,'Garcy'),(10001,8,'Chester'),(10001,8,'Garcy'),(10005,8,'Chester'),(10009,8,'Chester'),(10009,8,'Garcy'),(10010,8,'Chester'),(10011,8,'Chester'),(10012,8,'Chester'),(10001,9,'Garcy'),(10002,9,'Garcy'),(10003,9,'Garcy'),(10005,9,'Garcy'),(10007,9,'Garcy'),(10015,9,'Garcy'),(10002,10,'Lucy'),(10006,10,'Lucy'),(10007,10,'Lucy'),(10011,10,'Lucy'),(10012,10,'Lucy'),(10013,10,'Lucy'),(10019,10,'Lucy');
 /*!40000 ALTER TABLE `transaction` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -517,4 +518,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-27  5:01:58
+-- Dump completed on 2022-11-27 11:37:36
