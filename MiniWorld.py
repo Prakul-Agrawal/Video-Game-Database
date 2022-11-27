@@ -332,12 +332,15 @@ def create_server():
             query = "INSERT INTO server VALUES (%s, %s, %s, %s, %s);"
             cur.execute(query, (cap, country, city, par_country, par_city))
             con.commit()
+            print("Server added.")
         elif hasparent == "n":
             query = "INSERT INTO server VALUES (%s, %s, %s, NULL, NULL);"
             cur.execute(query, (cap, country, city))
             con.commit()
+            print("Server added.")
+        else:
+            print("Incorrect option.")
 
-        print("Server added.")
 
     except Exception as ex:
         con.rollback()
@@ -360,7 +363,7 @@ def update_player_info():
         rating = int(input("Enter player rating: "))
         clanid = int(input("Enter player clan-id: "))
 
-        query = "UPDATE player SET Level = %s, Email = \"%s\", ProfilePicture = \"%s\", Coins = %s, \
+        query = "UPDATE player SET Level = %s, Email = %s, ProfilePicture = %s, Coins = %s, \
                 TimePlayed = %s, Rating = %s, ClanID = %s \
                 WHERE playerID = %s;"
         cur.execute(query, (lvl, email, pfp, coins, timeplayed, rating, clanid))
