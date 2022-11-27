@@ -1,3 +1,5 @@
+-- Queries
+
 SELECT * FROM Matches WHERE DATE(StartTime) >= '1947-08-15';
 
 SELECT * FROM Characters WHERE MinimumPlayerLevel < 5;
@@ -26,11 +28,15 @@ SELECT AVG(KillsScored), CharacterName, MapName FROM (PlayedWith NATURAL JOIN Ma
 
 -- Create View Count(*), MatchID, SidePlayedOn where CharacterName = 'abcd' GROUP By MatchID, SidePlayedOn
 
+-- Analysis
+
 SELECT COUNT(*) FROM (Matches AS M INNER JOIN Server AS S ON M.Country = S.Country AND M.City = S.City) WHERE M.Country = "abcd" and M.City = "wxyz";
 
 -- SELECT A.PlayerID, A.MapName, A.CharacterName, A.WeaponName, Count(*) / (SELECT Count(*) FROM PlayedWith AS B WHERE B.PlayerID = A.PlayerID) FROM (PlayedWith NATURAL JOIN Matches) GROUP BY A.PlayerID, A.MapName, A.CharacterName, A.WeaponName;
 -- SELECT A.PlayerID, A.MapName, A.CharacterName, A.WeaponName, Count(*) / (SELECT Count(*) FROM PlayedWith AS B WHERE B.PlayerID = A.PlayerID) FROM (SELECT PlayerID, MapName, CharacterName, WeaponName FROM (PlayedWith NATURAL JOIN Matches)) AS A GROUP BY A.PlayerID, A.MapName, A.CharacterName, A.WeaponName ORDER BY A.PlayerID;
 SELECT A.PlayerID, A.CharacterName, Count(*) / (SELECT Count(*) FROM PlayedWith AS B WHERE B.PlayerID = A.PlayerID) FROM PlayedWith AS A GROUP BY A.PlayerID, A.CharacterName ORDER BY A.PlayerID;
+
+-- Insertion
 
 a = SELECT CURDATE(); --not required (maybe)
 INSERT INTO Player(Email, ProfilePicture, AccountCreationDate) VALUES("abcd@gmail.com", "thisisaURL", CURDATE());
@@ -47,6 +53,8 @@ INSERT INTO Support VALUES("CharName", 10);
 
 INSERT INTO Server VALUES(12345, "CountryName", "CityName", "ParentCountry", "ParentCity"); --If both parent are null, then it can accept, but otherwise has to satisfy foreign key
 
+-- Updation
+
 UPDATE Player SET Level = 3, Email = "new@gmail.com", ProfilePicture = "newurl", Coins = 99999, TimePlayed = 2048, Rating = 69, ClanID = 1234 WHERE PlayerID = 10000;
 
 UPDATE Characters SET HealthPoints = 1234, AttackDamage = 45, MinimumPlayerLevel = 2 WHERE Name = "EnterNameHere";
@@ -55,3 +63,13 @@ UPDATE MAGE SET SpellDamage = 24 WHERE CharacterName = "SameName";
 UPDATE MARKSMAN SET AttackRange = 24 WHERE CharacterName = "SameName"; 
 UPDATE TANK SET Armour = 24 WHERE CharacterName = "SameName"; 
 UPDATE SUPPORT SET Healing = 24 WHERE CharacterName = "SameName";
+
+-- Deletion
+
+DELETE FROM Server WHERE Country = "CountryName" AND City = "CityName";
+
+DELETE FROM NPC WHERE NPCName = "Name" AND MapName = "MapName";
+
+--Derived Attributes
+
+SELECT AVG(Rating) FROM Player WHERE ClanID = 103 AND ClanID IS NOT NULL;
