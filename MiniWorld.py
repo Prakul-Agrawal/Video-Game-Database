@@ -265,7 +265,6 @@ def create_player():
         cur.execute(query, (email, pfp))
         con.commit()
 
-        print("getting the max primary key")
         cur.execute("SELECT MAX(PlayerID) FROM player;")
         val = list(cur.fetchone().values())[0]
 
