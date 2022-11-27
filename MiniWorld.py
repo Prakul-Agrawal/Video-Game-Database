@@ -299,14 +299,14 @@ def create_character():
         role_list = ["Marksman", "Mage", "Tank", "Support"]
         stat_list = ["Attack Range", "Spell Damage", "Armor", "Healing"]
 
-        if role in [1, 2, 3, 4]:
+        if role in [0, 1, 2, 3]:
             stat = int(input("Enter character " + stat_list[role] + ": "))
             query = "INSERT INTO characters VALUES(%s, %s, %s, %s, %s);"
 
             cur.execute(query, (charname, hp, ad, lvl, role_list[role]))
 
-            query = "INSERT INTO %s VALUES(%s, %s);"
-            cur.execute(query, (role_list[role].lower(), charname, stat))
+            query = "INSERT INTO " + role_list[role].lower() + " %s VALUES(%s, %s);"
+            cur.execute(query, (charname, stat))
             con.commit()
 
             print("Added character.")
@@ -380,7 +380,7 @@ def update_character():
     """
     Update the details of buffed / nerfed characters when new patches are released
     """
-    #     UPDATE characters SET HealthPoints = 1234, AttackDamage = 45, MinimumplayerLevel = 2 WHERE Name = "EnterNameHere";
+
     stat_list = ["Attack Range", "Spell Damage", "Armor", "Healing"]
     query_list = ["AttackRange", "SpellDamage", "Armor", "Healing"]
     try:
@@ -389,11 +389,11 @@ def update_character():
         cur.execute(query, (charname))
         rolenum = 0
         role = cur.fetchone().lower()
-        if role == "Marksman": 
+        if role == "Marksman":
             rolenum = 0
-        elif role == "Mage": 
+        elif role == "Mage":
             rolenum = 1
-        elif role == "Tank": 
+        elif role == "Tank":
             rolenum = 2
         else:
             rolenum = 3
@@ -405,7 +405,7 @@ def update_character():
         query = "UPDATE characters SET HealthPoints = %s, AttackDamage = %s, MinimumplayerLevel = %s WHERE Name = %s;"
         cur.execute(query, (hp, ad, lvl, charname))
 
-        query = "UPDATE " + role + " SET " + query_list[role] + "=%s WHERE CharacterName=%s;"
+        query = "UPDATE " + role + " SET " + query_list[rolenum] + "=%s WHERE CharacterName=%s;"
         cur.execute(query, (stat, charname))
 
         con.commit()
@@ -426,7 +426,7 @@ def delete_server():
         country = input("Enter country of server to be deleted: ")
         city = input("Enter city of server to be deleted: ")
 
-        query="DELETE FROM server WHERE Country = %s AND City = %s;"
+        query = "DELETE FROM server WHERE Country = %s AND City = %s;"
         cur.execute(query, (country, city))
         con.commit()
 
@@ -445,7 +445,7 @@ def delete_npc():
         npc = input("Enter name of NPC to be deleted: ")
         mapname = input("Enter map of NPC to be deleted: ")
 
-        query="DELETE FROM npc WHERE NPCName = %s AND MapName = %s;"
+        query = "DELETE FROM npc WHERE NPCName = %s AND MapName = %s;"
         cur.execute(query, (npc, mapname))
         con.commit()
 
